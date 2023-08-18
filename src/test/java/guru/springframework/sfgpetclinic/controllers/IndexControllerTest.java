@@ -5,9 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.*;
 
 import java.time.Duration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -25,6 +27,8 @@ class IndexControllerTest {
   void index() {
     assertEquals("index", controller.index());
     assertEquals("index", controller.index(), "Wrong View Returned");
+    // assertion using assertj
+    assertThat(controller.index()).isEqualTo("index");
   }
 
   @Test
@@ -55,5 +59,35 @@ class IndexControllerTest {
   @Test
   void testAssumptionTruePositive() {
     assumeTrue("GURU".equalsIgnoreCase("GURU"));
+  }
+
+  @EnabledOnOs(OS.MAC)
+  @Test
+  void testMeOnMacOs(){
+  }
+
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  void testMeOnWindows(){
+  }
+
+  @EnabledOnJre(JRE.JAVA_8)
+  @Test
+  void testMeOnJava8(){
+  }
+
+  @EnabledOnJre(JRE.OTHER)
+  @Test
+  void testMeOnJava17(){
+  }
+
+  @EnabledIfEnvironmentVariable(named = "USER", matches = "oi")
+  @Test
+  void testIfUserOI(){
+  }
+
+  @EnabledIfEnvironmentVariable(named = "USER", matches = "fred")
+  @Test
+  void testIfUserFred(){
   }
 }
