@@ -24,10 +24,19 @@ class SpecialitySDJpaServiceTest {
   SpecialitySDJpaService service;
 
   @Test
+  void deleteByObjectTest() {
+    Speciality s = new Speciality();
+
+    service.delete(s);
+
+    verify(specialtyRepository).delete(any(Speciality.class));
+  }
+
+  @Test
   void findByIdTest() {
     Speciality s = new Speciality();
 
-    when(specialtyRepository.findById(1l)).thenReturn(Optional.of(s));
+    when(specialtyRepository.findById(anyLong())).thenReturn(Optional.of(s));
 
     Speciality foundSpecialty = service.findById(1l);
 
