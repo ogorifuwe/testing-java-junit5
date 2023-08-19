@@ -8,7 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -18,36 +21,49 @@ class SpecialitySDJpaServiceTest {
   private SpecialtyRepository specialtyRepository;
 
   @InjectMocks
-  SpecialitySDJpaService specialitySDJpaService;
+  SpecialitySDJpaService service;
+
+  @Test
+  void findByIdTest() {
+    Speciality s = new Speciality();
+
+    when(specialtyRepository.findById(1l)).thenReturn(Optional.of(s));
+
+    Speciality foundSpecialty = service.findById(1l);
+
+    verify(specialtyRepository).findById(1l);
+    assertThat(foundSpecialty).isNotNull();
+    assertEquals(s, foundSpecialty);
+  }
 
   @Test
   void deleteByIdTest() {
-    specialitySDJpaService.deleteById(1l);
-    specialitySDJpaService.deleteById(1l);
+    service.deleteById(1l);
+    service.deleteById(1l);
 
     verify(specialtyRepository, times(2)).deleteById(1l);
   }
 
   @Test
   void deleteByIdAtLeastTest() {
-    specialitySDJpaService.deleteById(1l);
-    specialitySDJpaService.deleteById(1l);
+    service.deleteById(1l);
+    service.deleteById(1l);
 
     verify(specialtyRepository, atLeastOnce()).deleteById(1l);
   }
 
   @Test
   void deleteByIdAtMostTest() {
-    specialitySDJpaService.deleteById(1l);
-    specialitySDJpaService.deleteById(1l);
+    service.deleteById(1l);
+    service.deleteById(1l);
 
     verify(specialtyRepository, atMost(5)).deleteById(1l);
   }
 
   @Test
   void deleteByIdNevertTest() {
-    specialitySDJpaService.deleteById(1l);
-    specialitySDJpaService.deleteById(1l);
+    service.deleteById(1l);
+    service.deleteById(1l);
 
     verify(specialtyRepository, atLeastOnce()).deleteById(1l);
     verify(specialtyRepository, never()).deleteById(5l);
@@ -55,6 +71,6 @@ class SpecialitySDJpaServiceTest {
 
   @Test
   void delete() {
-    specialitySDJpaService.delete(new Speciality());
+    service.delete(new Speciality());
   }
 }
