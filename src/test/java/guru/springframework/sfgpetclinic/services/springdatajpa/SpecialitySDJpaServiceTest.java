@@ -41,7 +41,7 @@ class SpecialitySDJpaServiceTest {
 
     Speciality foundSpecialty = service.findById(1l);
 
-    verify(specialtyRepository).findById(1l);
+    verify(specialtyRepository, timeout(100)).findById(1l);
     assertThat(foundSpecialty).isNotNull();
     assertEquals(s, foundSpecialty);
   }
@@ -51,7 +51,7 @@ class SpecialitySDJpaServiceTest {
     service.deleteById(1l);
     service.deleteById(1l);
 
-    verify(specialtyRepository, times(2)).deleteById(1l);
+    verify(specialtyRepository, timeout(0).times(2)).deleteById(1l);
   }
 
   @Test
