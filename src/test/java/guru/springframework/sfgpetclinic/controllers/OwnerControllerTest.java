@@ -17,8 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OwnerControllerTest {
@@ -90,12 +89,15 @@ class OwnerControllerTest {
     String viewName = controller.processFindForm(owner, bindingResult, model);
 
     verify(service).findAllByLastNameLike(stringArgumentCaptor.capture());
+    verifyNoMoreInteractions(service);
+    
     assertEquals("%FindMe%", stringArgumentCaptor.getValue());
     assertEquals("owners/ownersList", viewName);
 
     // inorder assertions
     inOrder.verify(service).findAllByLastNameLike(anyString());
-    inOrder.verify(model).addAttribute(anyString(), anyList());
+    inOrder.verify(model, times(1)).addAttribute(anyString(), anyList());
+    verifyNoMoreInteractions(model);
   }
 
 
@@ -123,7 +125,9 @@ class OwnerControllerTest {
     String viewName = controller.processFindForm(owner, bindingResult, null);
 
     verify(service).findAllByLastNameLike(stringArgumentCaptor.capture());
+    verifyNoInteractions(model);
     assertEquals("%Hamilton%", stringArgumentCaptor.getValue());
+    assertEquals("redirect:/owners/1", viewName);
   }
 
   @Disabled
