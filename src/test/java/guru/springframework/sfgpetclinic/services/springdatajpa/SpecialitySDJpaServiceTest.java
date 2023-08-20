@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -81,5 +82,14 @@ class SpecialitySDJpaServiceTest {
   @Test
   void delete() {
     service.delete(new Speciality());
+  }
+
+  @Test
+  void testDelete() {
+    doThrow(new RuntimeException()).when(specialtyRepository).delete(any(Speciality.class));
+
+    assertThrows(RuntimeException.class, () -> service.delete(new Speciality()));
+    verify(specialtyRepository).delete(any(Speciality.class));
+
   }
 }
