@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,6 +28,9 @@ class OwnerControllerTest {
 
   @Mock
   private BindingResult bindingResult;
+
+  @Mock
+  private Model model;
 
   @InjectMocks
   private OwnerController controller;
@@ -81,11 +84,18 @@ class OwnerControllerTest {
   @Test
   void processFindFormWildcardStringTestFoundAnswer() {
     Owner owner = new Owner(1l, "James", "FindMe");
-    String viewName = controller.processFindForm(owner, bindingResult, Mockito.mock(Model.class));
+
+    InOrder inOrder = Mockito.inOrder(service, model);
+
+    String viewName = controller.processFindForm(owner, bindingResult, model);
 
     verify(service).findAllByLastNameLike(stringArgumentCaptor.capture());
     assertEquals("%FindMe%", stringArgumentCaptor.getValue());
     assertEquals("owners/ownersList", viewName);
+
+    // inorder assertions
+    inOrder.verify(service).findAllByLastNameLike(anyString());
+    inOrder.verify(model).addAttribute(anyString(), anyList());
   }
 
 
