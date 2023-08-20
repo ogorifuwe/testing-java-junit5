@@ -90,7 +90,7 @@ class OwnerControllerTest {
 
     verify(service).findAllByLastNameLike(stringArgumentCaptor.capture());
     verifyNoMoreInteractions(service);
-    
+
     assertEquals("%FindMe%", stringArgumentCaptor.getValue());
     assertEquals("owners/ownersList", viewName);
 
